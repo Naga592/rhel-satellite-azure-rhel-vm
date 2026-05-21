@@ -8,6 +8,14 @@ terraform {
   }
 }
 
+ backend "azurerm" {
+    resource_group_name  = "tfstate-rg"
+    storage_account_name = "satfstatenew"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
+  }
+}
+
 variable "subscription_id" {
   type = string
 }
