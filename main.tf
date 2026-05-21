@@ -95,6 +95,7 @@ disable_password_authentication = true
   admin_ssh_key {
     username   = "adminuser"
     public_key = var.public_key
+  }
 
   os_disk {
     caching              = "ReadWrite"
