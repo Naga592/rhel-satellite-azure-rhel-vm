@@ -90,7 +90,7 @@ resource "azurerm_linux_virtual_machine" "Satellite_DR_VM" {
     azurerm_network_interface.Satellite_DR_NIC.id,
   ]
 
-disable_password_authentication = true
+  disable_password_authentication = true
 
   admin_ssh_key {
     username   = "adminuser"
