@@ -3,7 +3,7 @@ name: 'test'
 on:
   push:
     branches:
-      - terraform-azure-rhel-vm
+      - main
   pull_request:
     branches:
       - main
