@@ -8,7 +8,17 @@ terraform {
   }
 }
 
+variable "subscription_id" {
+  type = string
+}
+
+variable "public_key" {
+  type = string
+}
+
 provider "azurerm" {
+  subscription_id = var.subscription_id
+
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false
