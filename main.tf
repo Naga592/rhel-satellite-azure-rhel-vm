@@ -45,6 +45,24 @@ resource "azurerm_subnet" "Satellite_DR_SUBNET" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
+resource "azurerm_network_security_group" "Satellite_DR_NSG" {
+  name                = "satdevarmnsg001"
+  location            = azurerm_resource_group.Satellite_DR_RG.location
+  resource_group_name = azurerm_resource_group.Satellite_DR_RG.name
+
+  security_rule {
+    name                       = "Allow-SSH"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
 resource "azurerm_network_interface" "Satellite_DR_NIC" {
   name                = "satdevarmnic001"
   location            = azurerm_resource_group.Satellite_DR_RG.location
@@ -57,6 +75,11 @@ resource "azurerm_network_interface" "Satellite_DR_NIC" {
   }
 }
 
+resource "azurerm_network_interface_security_group_association" "Satellite_DR_NIC_NSG_ASSOC" {
+  network_interface_id      = azurerm_network_interface.Satellite_DR_NIC.id
+  network_security_group_id = azurerm_network_security_group.Satellite_DR_NSG.id
+}
+
 resource "azurerm_linux_virtual_machine" "Satellite_DR_VM" {
   name                = "satdevarmvm001"
   resource_group_name = azurerm_resource_group.Satellite_DR_RG.name
@@ -67,10 +90,11 @@ resource "azurerm_linux_virtual_machine" "Satellite_DR_VM" {
     azurerm_network_interface.Satellite_DR_NIC.id,
   ]
 
-#  admin_ssh_key {
-#   username   = "adminuser"
-#    public_key = file("~/.ssh/id_rsa.pub")
-#  }
+disable_password_authentication = true
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = var.public_key
 
   os_disk {
     caching              = "ReadWrite"
