@@ -1,0 +1,1 @@
+# rhel-satellite-azure-rhel-vm
